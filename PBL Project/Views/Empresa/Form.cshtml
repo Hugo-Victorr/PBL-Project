@@ -15,17 +15,17 @@
     <br />
 
     <label for="Descrição" class="control-label">Nome da empresa</label>
-    <input asp-for="Descricao" class="form-control" />
+    <input asp-for="Descricao" id="descricao" class="form-control" />
     <span asp-validation-for="Descricao" class="text-danger"></span>
     <br />
 
     <label for="Categoria" class="control-label">Categoria</label>
-    <select asp-for="CategoriaId" asp-items="ViewBag.Categorias" class="form-control"> </select>
+    <select asp-for="CategoriaId" id="categoria" asp-items="ViewBag.Categorias" class="form-control"> </select>
     <span asp-validation-for="CategoriaId" class="text-danger"></span>
     <br />
 
     <label for="Estado" class="control-label">Estado</label>
-    <select asp-for="EstadoId" asp-items="ViewBag.Estados" class="form-control"> </select>
+    <select asp-for="EstadoId" id="estado" asp-items="ViewBag.Estados" class="form-control"> </select>
     <span asp-validation-for="EstadoId" class="text-danger"></span>
     <br />
 

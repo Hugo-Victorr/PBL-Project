@@ -11,26 +11,44 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PBL_Project</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Technics</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
                         <span>&nbsp; &nbsp; &nbsp;</span>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Sobre">Sobre</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Sobre">Sobre</a>
+                        </li>
                         <span>&nbsp; &nbsp; &nbsp;</span>
-                        <li><a asp-area="" asp-controller="Empresa" asp-action="Index">Empresas</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Empresa" asp-action="Index">Empresas</a>
+                        </li>
                         <span>&nbsp; &nbsp; &nbsp;</span>
-                        <li><a asp-area="" asp-controller="Categoria" asp-action="Index">Categoria</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categoria" asp-action="Index">Categorias</a>
+                        </li>
                         <span>&nbsp; &nbsp; &nbsp;</span>
-                        <li><a asp-area="" asp-controller="Estado" asp-action="Index">Estados</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Estado" asp-action="Index">Estados</a>
+                        </li>
                         <span>&nbsp; &nbsp; &nbsp;</span>
-                        <li><a asp-area="" asp-controller="Dispositivo" asp-action="Index">Dispositivos</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Empresa" asp-action="ExibeConsultaAvancada">Filtro Empresas</a>
+                        </li>
                         <span>&nbsp; &nbsp; &nbsp;</span>
-                        <li><a asp-area="" asp-controller="Unidade" asp-action="Index">Unidades</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Unidade" asp-action="ExibeConsultaAvancada">Filtro Unidade</a>
+                        </li>
+                        <span>&nbsp; &nbsp; &nbsp;</span>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Dispositivo" asp-action="ExibeConsultaAvancada">Filtro Dispositivo</a>
+                        </li>
                         <span>&nbsp; &nbsp; &nbsp;</span>
                     </ul>
                 </div>

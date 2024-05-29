@@ -8,6 +8,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Data.SqlTypes;
+using System.Reflection;
 
 namespace PBL_Project.Controllers
 {
@@ -37,9 +38,12 @@ namespace PBL_Project.Controllers
         {
             try
             {
-                PreparaComboCategorias();
+                PreparaFiltroCategorias();
+                PreparaFiltroEstados();
+
                 ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
-                return View("ConsultaAvancada");
+                ViewBag.Estados.Insert(0, new SelectListItem("TODAS", "0"));
+                return View("Filtro");
             }
             catch (Exception erro)
             {
@@ -53,6 +57,8 @@ namespace PBL_Project.Controllers
 
             if (string.IsNullOrEmpty(model.Descricao))
                 ModelState.AddModelError("Descrição", "Preencha a descrição.");
+            if (model.CategoriaId <= 0)
+                ModelState.AddModelError("Categoria", "Informe o código do categoria.");
             if (model.EstadoId <= 0)
                 ModelState.AddModelError("Estado", "Informe o código do estado.");
             if (model.DataFundacao > DateTime.Now)
@@ -84,29 +90,31 @@ namespace PBL_Project.Controllers
             if (Operacao == "I")
                 model.DataFundacao = DateTime.Now;
 
-            PreparaListaCategoriaParaCombo();
+            PreparaListaCategoriasParaCombo();
             PreparaListaEstadosParaCombo();
         }
 
-        //public IActionResult ObtemDadosConsultaAvancada(string descricao, int categoria, int estado)
-        //{
-        //    try
-        //    {
-        //        JogoDAO dao = new JogoDAO();
-        //        if (string.IsNullOrEmpty(descricao))
-        //            descricao = "";
-        //        if (dataInicial.Date == Convert.ToDateTime("01/01/0001"))
-        //            dataInicial = SqlDateTime.MinValue.Value;
-        //        if (dataFinal.Date == Convert.ToDateTime("01/01/0001"))
-        //            dataFinal = SqlDateTime.MaxValue.Value;
-        //        var lista = dao.ConsultaAvancadaJogos(descricao, categoria, dataInicial, dataFinal);
-        //        return PartialView("pvGridJogos", lista);
-        //    }
-        //    catch (Exception erro)
-        //    {
-        //        return Json(new { erro = true, msg = erro.Message });
-        //    }
-        //}
+        public IActionResult ObtemDadosConsultaAvancada(string descricao, int categoria, int estado)
+        {
+            try
+            {
+                EmpresaDAO dao = new EmpresaDAO();
+
+                if (string.IsNullOrEmpty(descricao))
+                    descricao = "";
+                if (categoria < 1)
+                    categoria = 0;
+                if (estado < 1)
+                    estado = 0;
+                var lista = dao.ConsultaAvancadaEmpresas(descricao, categoria, estado);
+                return PartialView("pvGridJogos", lista);
+            }
+            catch (Exception erro)
+            {
+                return Json(new { erro = true, msg = erro.Message });
+            }
+        }
+
         private void PreparaComboCategorias()
         {
             CategoriaDAO dao = new CategoriaDAO();

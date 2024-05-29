@@ -91,6 +91,23 @@ namespace PBL_Project.DAO
             return lista;
         }
 
+        public List<EmpresaViewModel> ConsultaAvancadaEmpresas(string descricao, int categoriaId, int estadoId)
+        {
+            SqlParameter[] p = new SqlParameter[]
+            {
+              new SqlParameter("descricao", descricao),
+              new SqlParameter("categoriaId", categoriaId),
+              new SqlParameter("estadoId", estadoId)
+            };
+
+            
+            var tabela = HelperDAO.ExecutaProcSelect("empresa", p);
+            var lista = new List<EmpresaViewModel>();
+            //foreach (DataRow dr in tabela.Rows)
+            //    lista.Add(MontaModel(dr));
+            return lista;
+        }
+
         protected override void SetTabela()
         {
             Tabela = "Empresa";

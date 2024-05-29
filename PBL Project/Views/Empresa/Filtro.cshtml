@@ -10,16 +10,18 @@
         </div>
         <div class="col-lg-2">
             Estado <br />
-            Categoria <br /> <select id="estado" class="form-control" asp-items="@ViewBag.Estados"></select>
+            <select id="estado" class="form-control" asp-items="@ViewBag.Estados"></select>
         </div>
         <div class="col-lg-3">
-            Categoria <br /> <select id="categoria" class="form-control" asp-items="@ViewBag.Categorias"></select>
+            Categoria <br /> 
+            <select id="categoria" class="form-control" asp-items="@ViewBag.Categorias"></select>
         </div>
-        
         <div class="col-lg-1">
             <br />
             <input type="button" id="btnFiltro" class="btn btn-success" value="Aplicar" onclick="aplicaFiltroConsultaAvancada()" />
         </div>
     </div>
 </fieldset>
-<div id="
+
+<div id="resultadoConsulta" class="table-responsive">
+</div>

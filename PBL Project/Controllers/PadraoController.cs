@@ -46,7 +46,35 @@ namespace PBL_Project.Controllers
             if (GeraProximoId && Operacao == "I")
                 model.Id = DAO.ProximoId();
         }
-        public void PreparaListaCategoriaParaCombo()
+
+        public void PreparaListaEmpresasParaCombo()
+        {
+            EmpresaDAO empresaDAO = new EmpresaDAO();
+            var empresas = empresaDAO.Listagem();
+            List<SelectListItem> listaEmpresas = new List<SelectListItem>();
+            listaEmpresas.Add(new SelectListItem("Selecione uma empresa...", "-1"));
+            foreach (var empresa in empresas)
+            {
+                SelectListItem item = new SelectListItem(empresa.Descricao, empresa.Id.ToString());
+                listaEmpresas.Add(item);
+            }
+            ViewBag.Empresas = listaEmpresas;
+        }
+
+        public void PreparaListaUnidadesParaCombo()
+        {
+            UnidadeDAO unidadeDAO = new UnidadeDAO();
+            var unidades = unidadeDAO.Listagem();
+            List<SelectListItem> listaUnidades = new List<SelectListItem>();
+            listaUnidades.Add(new SelectListItem("Selecione uma unidade...", "-1"));
+            foreach (var empresa in unidades)
+            {
+                SelectListItem item = new SelectListItem(empresa.Descricao, empresa.Id.ToString());
+                listaUnidades.Add(item);
+            }
+            ViewBag.Empresas = listaUnidades;
+        }
+        public void PreparaListaCategoriasParaCombo()
         {
             CategoriaDAO categoriaDao = new CategoriaDAO();
             var categorias = categoriaDao.Listagem();
@@ -73,6 +101,46 @@ namespace PBL_Project.Controllers
             }
             ViewBag.Estados = listaEstados;
         }
+
+        public void PreparaFiltroCategorias()
+        {
+            CategoriaDAO dao = new CategoriaDAO();
+            var lista = dao.Listagem();
+            List<SelectListItem> listaRetorno = new List<SelectListItem>();
+            foreach (var categ in lista)
+                listaRetorno.Add(new SelectListItem(categ.Descricao, categ.Id.ToString()));
+            ViewBag.Categorias = listaRetorno;
+        }
+
+        public void PreparaFiltroEstados()
+        {
+            EstadoDAO dao = new EstadoDAO();
+            var lista = dao.Listagem();
+            List<SelectListItem> listaRetorno = new List<SelectListItem>();
+            foreach (var estado in lista)
+                listaRetorno.Add(new SelectListItem(estado.Descricao, estado.Id.ToString()));
+            ViewBag.Estados = listaRetorno;
+        }
+
+        public void PreparaFiltroEmpresas()
+        {
+            EmpresaDAO dao = new EmpresaDAO();
+            var lista = dao.Listagem();
+            List<SelectListItem> listaRetorno = new List<SelectListItem>();
+            foreach (var empresa in lista)
+                listaRetorno.Add(new SelectListItem(empresa.Descricao, empresa.Id.ToString()));
+            ViewBag.Empresas = listaRetorno;
+        }
+        public void PreparaFiltroUnidades()
+        {
+            UnidadeDAO dao = new UnidadeDAO();
+            var lista = dao.Listagem();
+            List<SelectListItem> listaRetorno = new List<SelectListItem>();
+            foreach (var unidade in lista)
+                listaRetorno.Add(new SelectListItem(unidade.Descricao, unidade.Id.ToString()));
+            ViewBag.Unidades = listaRetorno;
+        }
+
         public virtual IActionResult Save(T model, string Operacao)
         {
             try

@@ -9,6 +9,7 @@
         <th>Descrição</th>
         <th>Unidade</th>
         <th>Data de Instalação</th>
+        <th>Imagem</th>
         <th>Ações</th>
     </tr>
 
@@ -19,6 +20,10 @@
             <td>@dispositivo.Modelo.ToString()</td>
             <td>@dispositivo.UnidadeNome</td>
             <td>@dispositivo.DataInstalacao.ToShortDateString()</td>
+            <td>
+                <img id="imgPreview" src="data:image/jpeg;base64,@dispositivo.ImagemEmBase64"
+                     class="img-responsive" width="50">
+            </td>
             <td>
                 <a href="/dispositivo/EditDispositivo?id=@dispositivo.Id">
                     <img src="~/imagens/editIcon.png" width="20" height="20">

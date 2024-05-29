@@ -37,9 +37,14 @@ namespace PBL_Project.Controllers
         {
             try
             {
-                PreparaListaCategoriaParaCombo();
+                PreparaFiltroEmpresas();
+                PreparaFiltroCategorias();
+                PreparaFiltroEstados();
+                
+                ViewBag.Empresas.Insert(0, new SelectListItem("TODAS", "0"));
                 ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
-                return View("ConsultaAvancada");
+                ViewBag.Estados.Insert(0, new SelectListItem("TODAS", "0"));
+                return View("Filtro");
             }
             catch (Exception erro)
             {
@@ -123,25 +128,27 @@ namespace PBL_Project.Controllers
 
         }
 
-        //public IActionResult ObtemDadosConsultaAvancada(string descricao, int empresa,  int categoria, int estado)
-        //{
-        //    try
-        //    {
-        //        JogoDAO dao = new JogoDAO();
-        //        if (string.IsNullOrEmpty(descricao))
-        //            descricao = "";
-        //        if (dataInicial.Date == Convert.ToDateTime("01/01/0001"))
-        //            dataInicial = SqlDateTime.MinValue.Value;
-        //        if (dataFinal.Date == Convert.ToDateTime("01/01/0001"))
-        //            dataFinal = SqlDateTime.MaxValue.Value;
-        //        var lista = dao.ConsultaAvancadaJogos(descricao, categoria, dataInicial, dataFinal);
-        //        return PartialView("pvGridJogos", lista);
-        //    }
-        //    catch (Exception erro)
-        //    {
-        //        return Json(new { erro = true, msg = erro.Message });
-        //    }
-        //}
+        public IActionResult ObtemDadosConsultaAvancada(string descricao, int empresaId, int categoriaId, int estadoId)
+        {
+            try
+            {
+                UnidadeDAO dao = new UnidadeDAO();
+                if (string.IsNullOrEmpty(descricao))
+                    descricao = "";
+                if (empresaId < 1)
+                    empresaId = 0;
+                if (categoriaId < 1)
+                    categoriaId = 0;
+                if (estadoId < 1)
+                    estadoId = 0;
+                var lista = dao.ConsultaAvancadaUnidades(descricao, empresaId, categoriaId, estadoId);
+                return PartialView("pvGridJogos", lista);
+            }
+            catch (Exception erro)
+            {
+                return Json(new { erro = true, msg = erro.Message });
+            }
+        }
         private void PreparaComboCategorias()
         {
             CategoriaDAO dao = new CategoriaDAO();

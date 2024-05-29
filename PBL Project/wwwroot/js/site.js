@@ -31,24 +31,23 @@ function exibirImagem() {
     };
 }
 
-//function aplicaFiltroConsultaAvancadaEmpresas() {
-//    var vDescricao = document.getElementById('descricao').value;
-//    var vCategoria = document.getElementById('categoria').value;
-//    var vDataInicial = document.getElementById('dataInicial').value;
-//    var vDataFinal = document.getElementById('dataFinal').value;
-//    $.ajax({
-//        url: "/jogo/ObtemDadosConsultaAvancada",
-//        data: { descricao: vDescricao, categoria: vCategoria, dataInicial: vDataInicial, dataFinal: vDataFinal },
-//        success: function (dados) {
-//            if (dados.erro != undefined) {
-//                alert(dados.msg);
-//            }
-//            else {
-//                document.getElementById('resultadoConsulta').innerHTML = dados;
-//            }
-//        },
-//    });
-//}
+function aplicaFiltroConsultaAvancadaEmpresas() {
+    var vDescricao = document.getElementById('descricao').value;
+    var vEstado = document.getElementById('estado').value;
+    var vCategoria = document.getElementById('categoria').value;
+    $.ajax({
+        url: "/empresa/ObtemDadosConsultaAvancada",
+        data: { descricao: vDescricao, categoriaId: vCategoria, estadoId: vEstado},
+        success: function (dados) {
+            if (dados.erro != undefined) {
+                alert(dados.msg);
+            }
+            else {
+                document.getElementById('resultadoConsulta').innerHTML = dados;
+            }
+        },
+    });
+}
 
 //function aplicaFiltroConsultaAvancadaUnidades() {
 //    var vDescricao = document.getElementById('descricao').value;
