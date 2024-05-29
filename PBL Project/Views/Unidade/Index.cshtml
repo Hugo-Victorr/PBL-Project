@@ -1,0 +1,42 @@
+﻿@model List<UnidadeViewModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<a href="/unidade/CreateUnidade" class="btn btn-success">Novo registro</a>
+<br />
+
+<br />
+<table class="table table-striped table-responsive">
+    <tr>
+        <th>Código</th>
+        <th>Unidade</th>
+        <th>Empresa</th>
+        <th>Estado</th>
+        <th>Data de Fundação</th>
+        <th>Ações</th>
+    </tr>
+
+    @foreach (UnidadeViewModel unidade in Model)
+    {
+        <tr>
+            <td>@unidade.Id</td>
+            <td>@unidade.Descricao</td>
+            <td>@unidade.EmpresaNome</td>
+            <td>@unidade.EstadoNome</td>
+            <td>@unidade.DataFundacao.ToShortDateString()</td>
+            <td>
+                <a href="/unidade/EditUnidade?id=@unidade.Id">
+                    <img src="~/imagens/editIcon.png" width="20" height="20">
+                </a>
+                <a href="/dispositivo/IndexFiltrado?id=@unidade.Id">
+                    <img src="~/imagens/openIcon.png" width="20" height="20">
+                </a>
+                <a href="javascript:apagarUnidade(@unidade.Id)">
+                    <img src="~/imagens/trashIcon.png" width="20" height="20">
+                </a>
+            </td>
+        </tr>
+    }
+</table>

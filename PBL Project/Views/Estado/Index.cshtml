@@ -1,0 +1,24 @@
+﻿@model List<EstadoViewModel>
+
+<a href="/estado/Create" class="btn btn-success">Novo registro</a>
+<br />
+<br />
+<table class="table table-striped table-responsive">
+    <tr>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th>Ações</th>
+    </tr>
+
+    @foreach (var estado in Model)
+    {
+        <tr>
+            <td>@estado.Id</td>
+            <td>@estado.Descricao</td>
+            <td>
+                <a href="/estado/edit?id=@estado.Id">✍🏻</a>
+                <a href="javascript:apagarEstado(@estado.Id)">💣</a>
+            </td>
+        </tr>
+    }
+</table>

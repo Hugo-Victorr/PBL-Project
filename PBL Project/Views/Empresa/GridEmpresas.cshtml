@@ -1,0 +1,27 @@
+﻿@model List<EmpresaViewModel>
+
+<table class="table table-striped table-responsive" id="tbListagemEmpresas">
+    <tr>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th>Estado</th>
+        <th>Data de Fundação</th>
+        <th>Imagem</th>
+    </tr>
+
+    @foreach (EmpresaViewModel empresa in Model)
+    {
+        <tr>
+            <td>@empresa.Id</td>
+            <td>@empresa.Descricao</td>
+            <td>@empresa.CategoriaNome</td>
+            <td>@empresa.EstadoNome</td>
+            <td>@empresa.DataFundacao.ToShortDateString()</td>
+            <td>
+                <img id="imgPreview" src="data:image/jpeg;base64,@empresa.ImagemEmBase64"
+                     class="img-responsive" width="50">
+            </td>
+        </tr>
+    }
+</table>
