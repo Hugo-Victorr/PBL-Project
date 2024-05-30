@@ -94,7 +94,7 @@ namespace PBL_Project.Controllers
             PreparaListaEstadosParaCombo();
         }
 
-        public IActionResult ObtemDadosConsultaAvancada(string descricao, int categoria, int estado)
+        public IActionResult ObtemDadosConsultaAvancada(string descricao, int categoriaId, int estadoId)
         {
             try
             {
@@ -102,12 +102,12 @@ namespace PBL_Project.Controllers
 
                 if (string.IsNullOrEmpty(descricao))
                     descricao = "";
-                if (categoria < 1)
-                    categoria = 0;
-                if (estado < 1)
-                    estado = 0;
-                var lista = dao.ConsultaAvancadaEmpresas(descricao, categoria, estado);
-                return PartialView("pvGridJogos", lista);
+                if (categoriaId < 1)
+                    categoriaId = 0;
+                if (estadoId < 1)
+                    estadoId = 0;
+                var lista = dao.ConsultaAvancadaEmpresas(descricao, categoriaId, estadoId);
+                return PartialView("GridEmpresas", lista);
             }
             catch (Exception erro)
             {

@@ -51,6 +51,27 @@ namespace PBL_Project.DAO
             return a;
         }
 
+        protected DispositivoViewModel MontaModelListagemAvancada(DataRow registro)
+        {
+            DispositivoViewModel a = new DispositivoViewModel();
+            a.Id = Convert.ToInt32(registro["id"]);
+            a.Modelo = registro["modelo"].ToString();
+            a.DataInstalacao = Convert.ToDateTime(registro["dataInstalacao"]);
+            a.UnidadeId = Convert.ToInt32(registro["unidadeId"]);
+            a.UnidadeNome = registro["unidadeNome"].ToString();
+            a.EmpresaId = Convert.ToInt32(registro["empresaId"]);
+            a.EstadoId = Convert.ToInt32(registro["estadoId"]);
+            a.CategoriaId = Convert.ToInt32(registro["categoriaId"]);
+            a.EmpresaNome = registro["empresaNome"].ToString();
+            a.EstadoNome = registro["estadoNome"].ToString();
+            a.CategoriaNome = registro["categoriaNome"].ToString();
+
+            if (registro["imagem"] != DBNull.Value)
+                a.ImagemEmByte = registro["imagem"] as byte[];
+
+            return a;
+        }
+
         public virtual List<DispositivoViewModel> ListagemDispositivos(int unidadeId)
         {
             var p = new SqlParameter[]
@@ -80,11 +101,10 @@ namespace PBL_Project.DAO
               new SqlParameter("estadoId", estadoId)
             };
 
-
-            var tabela = HelperDAO.ExecutaProcSelect("unidade", p);
+            var tabela = HelperDAO.ExecutaProcSelect("dispositivo", p);
             var lista = new List<DispositivoViewModel>();
-            //foreach (DataRow dr in tabela.Rows)
-            //    lista.Add(MontaModel(dr));
+            foreach (DataRow dr in tabela.Rows)
+                lista.Add(MontaModelListagem(dr));
             return lista;
         }
 

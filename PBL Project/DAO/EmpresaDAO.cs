@@ -99,12 +99,11 @@ namespace PBL_Project.DAO
               new SqlParameter("categoriaId", categoriaId),
               new SqlParameter("estadoId", estadoId)
             };
-
             
-            var tabela = HelperDAO.ExecutaProcSelect("empresa", p);
+            var tabela = HelperDAO.ExecutaProcSelect("spListagemAvancada_Empresas", p);
             var lista = new List<EmpresaViewModel>();
-            //foreach (DataRow dr in tabela.Rows)
-            //    lista.Add(MontaModel(dr));
+            foreach (DataRow dr in tabela.Rows)
+                lista.Add(MontaModelListagem(dr));
             return lista;
         }
 

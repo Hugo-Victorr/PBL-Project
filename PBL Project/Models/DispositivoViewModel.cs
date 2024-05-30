@@ -22,5 +22,11 @@ namespace PBL_Project.Models
         }
 
         public string UnidadeNome { get; set; }
+        public int EmpresaId { get; set; }
+        public string EmpresaNome { get; set; }
+        public int EstadoId { get; set; }
+        public string EstadoNome { get; set; }
+        public int CategoriaId { get; set; }
+        public string CategoriaNome { get; set; }
     }
 }

@@ -33,11 +33,11 @@ namespace PBL_Project.DAO
         {
             UnidadeViewModel a = new UnidadeViewModel();
             a.Id = Convert.ToInt32(registro["id"]);
-            a.Descricao = registro["unidadeDescricao"].ToString();
+            a.Descricao = registro["unidadeNome"].ToString();
             a.EmpresaId = Convert.ToInt32(registro["empresaId"]);
-            a.EmpresaNome = registro["empresaDescricao"].ToString();
+            a.EmpresaNome = registro["empresaNome"].ToString();
             a.EstadoId = Convert.ToInt32(registro["estadoId"]);
-            a.EstadoNome = registro["estadoDescricao"].ToString();
+            a.EstadoNome = registro["estadoNome"].ToString();
             a.DataFundacao = Convert.ToDateTime(registro["dataFundacao"]);
             return a;
         }
@@ -60,7 +60,7 @@ namespace PBL_Project.DAO
             return lista;
         }
 
-        public List<DispositivoViewModel> ConsultaAvancadaUnidades(string descricao, int empresaId, int categoriaId, int estadoId)
+        public List<UnidadeViewModel> ConsultaAvancadaUnidades(string descricao, int empresaId, int categoriaId, int estadoId)
         {
             SqlParameter[] p = new SqlParameter[]
             {
@@ -71,10 +71,10 @@ namespace PBL_Project.DAO
             };
 
 
-            var tabela = HelperDAO.ExecutaProcSelect("unidade", p);
-            var lista = new List<DispositivoViewModel>();
-            //foreach (DataRow dr in tabela.Rows)
-            //    lista.Add(MontaModel(dr));
+            var tabela = HelperDAO.ExecutaProcSelect("", p);
+            var lista = new List<UnidadeViewModel>();
+            foreach (DataRow dr in tabela.Rows)
+                lista.Add(MontaModelListagem(dr));
             return lista;
         }
 

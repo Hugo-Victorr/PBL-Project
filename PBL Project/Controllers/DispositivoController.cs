@@ -164,7 +164,7 @@ namespace PBL_Project.Controllers
                 if (estadoId < 1)
                     estadoId = 0;
                 var lista = dao.ConsultaAvancadaDispositivos(descricao, empresaId, unidadeId, categoriaId, estadoId);
-                return PartialView("pvGridJogos", lista);
+                return PartialView("GridDispositivo", lista);
             }
             catch (Exception erro)
             {

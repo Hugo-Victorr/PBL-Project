@@ -8,20 +8,21 @@
             Descrição<br />
             <input type="text" id="descricao" class="form-control" />
         </div>
+        <div class="col-lg-2">
+            Empresa <br />
+            <select id="empresa" class="form-control" asp-items="@ViewBag.Empresas"></select>
+        </div>
         <div class="col-lg-3">
-            Categoria <br /> <select id="categoria" class="form-control" asp-items="@ViewBag.Categorias"></select>
+            Categoria <br /> 
+            <select id="categoria" class="form-control" asp-items="@ViewBag.Categorias"></select>
         </div>
-        <div class="col-lg-2">
-            Período <br />
-            <input type="date" id="dataInicial" class="form-control" />
-        </div>
-        <div class="col-lg-2">
-            <br />
-            <input type="date" id="dataFinal" class="form-control" />
+        <div class="col-lg-3">
+            Estado <br /> 
+            <select id="estado" class="form-control" asp-items="@ViewBag.Estados"></select>
         </div>
         <div class="col-lg-1">
             <br />
-            <input type="button" id="btnFiltro" class="btn btn-success" value="Aplicar" onclick="aplicaFiltroConsultaAvancada()" />
+            <input type="button" id="btnFiltro" class="btn btn-success" value="Aplicar" onclick="aplicaFiltroConsultaAvancadaUnidades()" />
         </div>
     </div>
 </fieldset>

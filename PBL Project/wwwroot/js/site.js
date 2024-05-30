@@ -49,43 +49,44 @@ function aplicaFiltroConsultaAvancadaEmpresas() {
     });
 }
 
-//function aplicaFiltroConsultaAvancadaUnidades() {
-//    var vDescricao = document.getElementById('descricao').value;
-//    var vCategoria = document.getElementById('categoria').value;
-//    var vDataInicial = document.getElementById('dataInicial').value;
-//    var vDataFinal = document.getElementById('dataFinal').value;
-//    $.ajax({
-//        url: "/jogo/ObtemDadosConsultaAvancada",
-//        data: { descricao: vDescricao, categoria: vCategoria, dataInicial: vDataInicial, dataFinal: vDataFinal },
-//        success: function (dados) {
-//            if (dados.erro != undefined) {
-//                alert(dados.msg);
-//            }
-//            else {
-//                document.getElementById('resultadoConsulta').innerHTML = dados;
-//            }
-//        },
-//    });
-//}
+function aplicaFiltroConsultaAvancadaUnidades() {
+    var vDescricao = document.getElementById('descricao').value;
+    var vEmpresa = document.getElementById('empresa').value;
+    var vUnidade = document.getElementById('unidade').value;
+    var vCategoria = document.getElementById('categoria').value;
+    var vEstado = document.getElementById('estado').value;
+    $.ajax({
+        url: "/jogo/ObtemDadosConsultaAvancada",
+        data: { descricao: vDescricao, empresaId: vEmpresa, unidadeId: vUnidade, categoriaId: vCategoria, estadoId: vEstado},
+        success: function (dados) {
+            if (dados.erro != undefined) {
+                alert(dados.msg);
+            }
+            else {
+                document.getElementById('resultadoConsulta').innerHTML = dados;
+            }
+        },
+    });
+}
 
-//function aplicaFiltroConsultaAvancadaDispositivos() {
-//    var vDescricao = document.getElementById('descricao').value;
-//    var vCategoria = document.getElementById('categoria').value;
-//    var vDataInicial = document.getElementById('dataInicial').value;
-//    var vDataFinal = document.getElementById('dataFinal').value;
-//    $.ajax({
-//        url: "/jogo/ObtemDadosConsultaAvancada",
-//        data: { descricao: vDescricao, categoria: vCategoria, dataInicial: vDataInicial, dataFinal: vDataFinal },
-//        success: function (dados) {
-//            if (dados.erro != undefined) {
-//                alert(dados.msg);
-//            }
-//            else {
-//                document.getElementById('resultadoConsulta').innerHTML = dados;
-//            }
-//        },
-//    });
-//}
+function aplicaFiltroConsultaAvancadaDispositivos() {
+    var vDescricao = document.getElementById('descricao').value;
+    var vCategoria = document.getElementById('categoria').value;
+    var vDataInicial = document.getElementById('dataInicial').value;
+    var vDataFinal = document.getElementById('dataFinal').value;
+    $.ajax({
+        url: "/jogo/ObtemDadosConsultaAvancada",
+        data: { descricao: vDescricao, categoria: vCategoria, dataInicial: vDataInicial, dataFinal: vDataFinal },
+        success: function (dados) {
+            if (dados.erro != undefined) {
+                alert(dados.msg);
+            }
+            else {
+                document.getElementById('resultadoConsulta').innerHTML = dados;
+            }
+        },
+    });
+}
 
 
 
