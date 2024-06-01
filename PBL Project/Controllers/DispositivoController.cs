@@ -7,6 +7,14 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlTypes;
+using System.Net.Http;
+using System.Net;
+using System.Text.Json.Serialization;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace PBL_Project.Controllers
 {
@@ -26,6 +34,8 @@ namespace PBL_Project.Controllers
                     HelperDAO.unidadeId = id;
                 DispositivoDAO dispositivoDAO = new DispositivoDAO();
                 var lista = dispositivoDAO.ListagemDispositivos(HelperDAO.unidadeId);
+                lista.ForEach(d => d.PreencheAtributosDispositivo());
+
                 return View(NomeViewIndex, lista);
             }
             catch (Exception erro)
@@ -43,10 +53,10 @@ namespace PBL_Project.Controllers
                 PreparaFiltroCategorias();
                 PreparaFiltroEstados();
 
+                ViewBag.Empresas.Insert(0, new SelectListItem("TODAS", "0"));
+                ViewBag.Unidades.Insert(0, new SelectListItem("TODAS", "0"));
                 ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
-                ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
-                ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
-                ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
+                ViewBag.Estados.Insert(0, new SelectListItem("TODAS", "0"));
                 return View("Filtro");
             }
             catch (Exception erro)
@@ -71,7 +81,7 @@ namespace PBL_Project.Controllers
             }
         }
 
-        public virtual IActionResult SaveDispositivo(DispositivoViewModel model, string Operacao)
+        public async virtual Task<IActionResult> SaveDispositivo(DispositivoViewModel model, string Operacao)
         {
             try
             {
@@ -80,14 +90,23 @@ namespace PBL_Project.Controllers
                 {
                     ViewBag.Operacao = Operacao;
                     PreencheDadosParaView(Operacao, model);
-                    return View(NomeViewForm, model);
+                    return View(NomeViewForm, model); 
                 }
                 else
                 {
                     if (Operacao == "I")
-                        DAO.Insert(model);
+                    {
+                        var result = await AdicionaDispositivoFiware(model);
+                        var content = await InscreveDispositivoNoSTH(model);
+
+                        if(result && content)
+                            DAO.Insert(model);
+                    }
                     else
+                    {
                         DAO.Update(model);
+                    }
+
                     return RedirectToAction("IndexFiltrado", HelperDAO.unidadeId);
                 }
             }
@@ -95,6 +114,190 @@ namespace PBL_Project.Controllers
             {
                 return View("Error", new ErrorViewModel(erro.ToString()));
             }
+        }
+
+        //Adiciona dispositivo
+        public async Task<bool> AdicionaDispositivoFiware(DispositivoViewModel model)
+        {
+            try
+            {
+                model.PreencheAtributosDispositivo();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:4041/iot/devices";
+
+                    var bodyObject = new
+                    {
+                        devices = new[]
+                        {
+                            new
+                            {
+                                device_id = model.device_id,
+                                entity_name = model.entity_name,
+                                entity_type = "TempSensor",
+                                protocol = "PDI-IoTA-UltraLight",
+                                transport = "MQTT",
+                                attributes = new[]
+                                {
+                                    new { object_id = "t", name = "temperatura", type = "Integer" }
+                                }
+                            }
+                        }
+                    };
+
+                    var body = JsonConvert.SerializeObject(bodyObject);
+
+                    var content = new StringContent(body, Encoding.UTF8, "application/json");
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+                    requestMessage.Content = content;
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string resposta = await response.Content.ReadAsStringAsync();
+                            return true;
+                        }
+                        else
+                        {
+                            throw new Exception("Erro ao consultar. Code: " + response.StatusCode);
+                        }
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return false;
+            }
+        }
+
+
+        //inscreve dispositivo no STH
+        public async Task<bool> InscreveDispositivoNoSTH(DispositivoViewModel model)
+        {
+            try
+            {
+                model.PreencheAtributosDispositivo();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:1026/v2/subscriptions";
+
+                    var bodyObject = new
+                    {
+                        description = "Notify STH-Comet of all Motion Sensor count changes",
+                        subject = new
+                        {
+                            entities = new[]
+                            {
+                                new { id = model.entity_name, type = "TempSensor" }
+                            },
+                            condition = new { attrs = new[] { "temperatura" } }
+                        },
+                        notification = new
+                        {
+                            http = new { url = url },
+                            attrs = new[] { "temperatura" },
+                            attrsFormat = "legacy"
+                        }
+                    };
+
+                    var body = JsonConvert.SerializeObject(bodyObject);
+
+                    var content = new StringContent(body, Encoding.UTF8, "application/json");
+
+                    
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+                    requestMessage.Content = content;
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string resposta = await response.Content.ReadAsStringAsync();
+                            return true;
+                        }
+                        else
+                        {
+                            throw new Exception("Erro ao consultar. Code: " + response.StatusCode);
+                        }
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return false;
+            }
+        }
+
+        public async Task<IActionResult> DeleteDispositivo(string device_id, int id)
+        {
+            try
+            {
+                var result = await DeletaDispositivoFiware(device_id);
+
+                DAO.Delete(id);
+                return RedirectToAction("IndexFiltrado");
+            }
+            catch (Exception erro)
+            {
+                return View("Error", new ErrorViewModel(erro.ToString()));
+            }
+        }
+
+        public async Task<bool> DeletaDispositivoFiware(string device_id)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:4041/iot/devices/{device_id}";
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Delete, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string resposta = await response.Content.ReadAsStringAsync();
+                            return true;
+                        }
+                        else
+                        {
+                            throw new Exception("Erro ao consultar. Code: " + response.StatusCode);
+                        }
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return false;
+            }
+        }
+
+        public bool CadastraDispositivo()
+        {
+            return true;
+        }
+
+        public bool EditaDispositivo()
+        {
+            return true;
         }
 
         public IActionResult EditDispositivo(int id)
@@ -163,14 +366,48 @@ namespace PBL_Project.Controllers
                     categoriaId = 0;
                 if (estadoId < 1)
                     estadoId = 0;
+
+                var FiwareList = ListaDispositivoFiware();
+
                 var lista = dao.ConsultaAvancadaDispositivos(descricao, empresaId, unidadeId, categoriaId, estadoId);
-                return PartialView("GridDispositivo", lista);
+                return PartialView("GridDispositivos", lista);
             }
             catch (Exception erro)
             {
                 return Json(new { erro = true, msg = erro.Message });
             }
         }
+
+        public IActionResult ListaDispositivoFiware()
+        {
+            try
+            {
+
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:4041/iot/devices";
+
+                    using (var response = httpClient.GetAsync(url).Result)
+                    {
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            string resposta = response.Content.ReadAsStringAsync().Result;
+                            return Content(resposta);
+                        }
+                        else
+                        {
+                            throw new Exception("Erro ao consultar. Code: " + response.StatusCode);
+                        }
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return Json(new { erro = true, msg = erro.Message });
+            }
+        }
+
         protected override void PreencheDadosParaView(string Operacao, DispositivoViewModel model)
         {
             base.PreencheDadosParaView(Operacao, model);

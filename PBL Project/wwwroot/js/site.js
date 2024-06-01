@@ -8,9 +8,9 @@ function apagarUnidade(id) {
         location.href = '/unidade/Delete?id=' + id;
 }
 
-function apagarDispositivo(id) {
+function apagarDispositivo(device_id, id) {
     if (confirm('Confirma a exclusão do registro?'))
-        location.href = '/dispositivo/Delete?id=' + id;
+        location.href = '/dispositivo/DeleteDispositivo?device_id=' + device_id + '&id=' + id;
 }
 
 function apagarCategoria(id) {
@@ -71,12 +71,13 @@ function aplicaFiltroConsultaAvancadaUnidades() {
 
 function aplicaFiltroConsultaAvancadaDispositivos() {
     var vDescricao = document.getElementById('descricao').value;
+    var vEmpresa = document.getElementById('empresa').value;
+    var vUnidade = document.getElementById('unidade').value;
     var vCategoria = document.getElementById('categoria').value;
-    var vDataInicial = document.getElementById('dataInicial').value;
-    var vDataFinal = document.getElementById('dataFinal').value;
+    var vEstado = document.getElementById('estado').value;
     $.ajax({
-        url: "/jogo/ObtemDadosConsultaAvancada",
-        data: { descricao: vDescricao, categoria: vCategoria, dataInicial: vDataInicial, dataFinal: vDataFinal },
+        url: "/dispositivo/ObtemDadosConsultaAvancada",
+        data: { descricao: vDescricao, empresa: vEmpresa, unidade: vUnidade, categoria: vCategoria, estado: vEstado },
         success: function (dados) {
             if (dados.erro != undefined) {
                 alert(dados.msg);

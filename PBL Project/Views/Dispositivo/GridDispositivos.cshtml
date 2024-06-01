@@ -3,18 +3,29 @@
 <table class="table table-striped table-responsive">
     <tr>
         <th>Código</th>
-        <th>Descrição</th>
+        <th>Modelo</th>
+        <th>Empresa</th>
         <th>Unidade</th>
+        <th>Categoria</th>
+        <th>Estado</th>
         <th>Data de Instalação</th>
+        <th>Imagem</th>
     </tr>
 
     @foreach (DispositivoViewModel dispositivo in Model)
     {
         <tr>
             <td>@dispositivo.Id</td>
-            <td>@dispositivo.Modelo.ToString()</td>
+            <td>@dispositivo.Modelo</td>
+            <td>@dispositivo.EmpresaNome</td>
             <td>@dispositivo.UnidadeNome</td>
+            <td>@dispositivo.CategoriaNome</td>
+            <td>@dispositivo.EstadoNome</td>
             <td>@dispositivo.DataInstalacao.ToShortDateString()</td>
+            <td>
+                <img id="imgPreview" src="data:image/jpeg;base64,@dispositivo.ImagemEmBase64"
+                     class="img-responsive" width="50">
+            </td>
         </tr>
     }
 </table>

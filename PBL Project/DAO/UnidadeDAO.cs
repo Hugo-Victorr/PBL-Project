@@ -71,7 +71,7 @@ namespace PBL_Project.DAO
             };
 
 
-            var tabela = HelperDAO.ExecutaProcSelect("", p);
+            var tabela = HelperDAO.ExecutaProcSelect("spListagemAvancada_Unidades", p);
             var lista = new List<UnidadeViewModel>();
             foreach (DataRow dr in tabela.Rows)
                 lista.Add(MontaModelListagem(dr));

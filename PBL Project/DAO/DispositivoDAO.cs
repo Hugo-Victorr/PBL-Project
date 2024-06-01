@@ -101,10 +101,10 @@ namespace PBL_Project.DAO
               new SqlParameter("estadoId", estadoId)
             };
 
-            var tabela = HelperDAO.ExecutaProcSelect("dispositivo", p);
+            var tabela = HelperDAO.ExecutaProcSelect("spListagemAvancada_Dispositivos", p);
             var lista = new List<DispositivoViewModel>();
             foreach (DataRow dr in tabela.Rows)
-                lista.Add(MontaModelListagem(dr));
+                lista.Add(MontaModelListagemAvancada(dr));
             return lista;
         }
 
