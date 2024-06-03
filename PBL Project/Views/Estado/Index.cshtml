@@ -1,5 +1,7 @@
 ﻿@model List<EstadoViewModel>
 
+<h2>Listagem de Estados</h2>
+
 <a href="/estado/Create" class="btn btn-success">Novo registro</a>
 <br />
 <br />
@@ -16,8 +18,12 @@
             <td>@estado.Id</td>
             <td>@estado.Descricao</td>
             <td>
-                <a href="/estado/edit?id=@estado.Id">✍🏻</a>
-                <a href="javascript:apagarEstado(@estado.Id)">💣</a>
+                <a href="/estado/edit?id=@estado.Id">
+                    <img src="~/imagens/editIcon.png" width="20" height="20">
+                </a>
+                <a href="javascript:apagarEstado(@estado.Id)">
+                    <img src="~/imagens/trashIcon.png" width="20" height="20">
+                </a>
             </td>
         </tr>
     }

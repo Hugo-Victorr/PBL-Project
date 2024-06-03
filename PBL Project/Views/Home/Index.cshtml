@@ -1,13 +1,46 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Exibição de Nome e Frase</title>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Tecnics</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .centered-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            height: 85vh;
+            text-align: center;
+            background-image: url('/imagens/motoresEletricos.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+            .centered-content div {
+                margin-top: 20px;
+            }
+
+            .centered-content h1 {
+                font-size: 3em;
+                color: #fff;
+            }
+
+            .centered-content p {
+                font-size: 1.5em;
+                color: #fff;
+            }
+    </style>
 </head>
 <body>
-    <div>
-        <h2>@ViewBag.Title</h2>
-        <p>@ViewBag.Frase</p>
+    <div class="centered-content">
+        <div>
+            <h1>Tecnics</h1>
+            <p>Monitoramento de temperatura preciso para fabricação de motores</p>
+        </div>
     </div>
 </body>
 </html>

@@ -10,6 +10,7 @@
         <th>Estado</th>
         <th>Data de Instalação</th>
         <th>Imagem</th>
+        <th>Monitoramento</th>
     </tr>
 
     @foreach (DispositivoViewModel dispositivo in Model)
@@ -26,6 +27,13 @@
                 <img id="imgPreview" src="data:image/jpeg;base64,@dispositivo.ImagemEmBase64"
                      class="img-responsive" width="50">
             </td>
+            <td>
+                <a href="/dispositivo/IndexMonitoramento?id=@dispositivo.Id">
+                    <img src="~/imagens/chartIcon.png" width="20" height="20">
+                </a>
+            </td>
         </tr>
     }
 </table>
+
+

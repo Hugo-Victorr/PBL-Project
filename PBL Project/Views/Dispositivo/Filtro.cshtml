@@ -33,3 +33,35 @@
 
 <div id="resultadoConsulta" class="table-responsive">
 </div>
+
+<br />
+<h2>Analise de dados</h2>
+
+<br />
+<h3>Por Empresa/ Unidade</h3>
+<canvas id="graficoPieEmpresaUnidade" width="400" height="150">
+
+</canvas>
+
+<button onclick="consultaAvancadaEmpresaUnidade('Empresa')">Empresa</button>
+<button onclick="consultaAvancadaEmpresaUnidade('Unidade')">Unidade</button>
+
+<br />
+<br />
+<h3>Por Estado/ Categoria</h3>
+<canvas id="graficoBarCategoriaEstado" width="400" height="150">
+
+</canvas>
+
+<button onclick="consultaAvancadaCategoriaEstado('Categoria')">Categoria</button>
+<button onclick="consultaAvancadaCategoriaEstado('Estado')">Estado</button>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            consultaAvancadaEmpresaUnidade('Empresa');
+            consultaAvancadaCategoriaEstado('Categoria');
+        });
+    </script>
+}

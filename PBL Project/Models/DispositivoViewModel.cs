@@ -13,7 +13,7 @@ namespace PBL_Project.Models
         public string entity_type { get; set; } = "TempSensor";
         public string protocol { get; set; } = "PDI-IoTA-UltraLight";
         public string transport { get; set; } = "MQTT";
-        public List<AtributosDispositivo> attributes { get; set; } = new List<AtributosDispositivo>() { new AtributosDispositivo() };
+        public List<AtributosDispositivo> attributes { get; set; }
 
         #endregion
 
@@ -56,7 +56,12 @@ namespace PBL_Project.Models
         [JsonIgnore]
         public string CategoriaNome { get; set; }
         [JsonIgnore]
-        public string Temperatura { get; set; }
+        public List<double> Temperaturas { get; set; } = new List<double>();
+        [JsonIgnore]
+        public List<string> Tempos { get; set; } = new List<string>();
+        [JsonIgnore]
+        public List<double> ErroRelativo { get; set; } = new List<double>();
+
 
         #endregion
 
@@ -64,13 +69,37 @@ namespace PBL_Project.Models
         {
             device_id = "TempSensor" + Id.ToString();
             entity_name = "urn:ngsi-ld:TempSensor:" + Id.ToString();
+            attributes = new List<AtributosDispositivo> { new AtributosDispositivo() };
         }
+
+
 
         public class AtributosDispositivo
         {
             public string object_id { get; set; } = "t";
             public string name { get; set; } = "temperatura";
             public string type { get; set; } = "Integer";
+        }
+
+        public class PropriedadesGrafico
+        {
+            public List<string> labels { get; set; } = new List<string>();
+            public List<int> dispositivos { get; set; } = new List<int>();
+            public List<string> chartColors { get; set; } = new List<string>();
+            public List<string> Cores { get; set; } = new List<string>
+            {
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "lightblue",
+            "blue",
+            "purple",
+            "pink",
+            "brown",
+            "gray",
+            "black"
+            };
         }
     }
 }

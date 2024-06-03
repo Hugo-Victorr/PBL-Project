@@ -12,5 +12,7 @@ namespace PBL_Project.Models
 
         public string EmpresaNome { get; set; }
         public string EstadoNome { get; set; }
+        public int CategoriaId { get; set; }
+        public string CategoriaNome { get; set; }
     }
 }

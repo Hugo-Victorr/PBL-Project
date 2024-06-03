@@ -3,6 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>Listagem de Unidades</h2>
+
 <br />
 <a href="/unidade/CreateUnidade" class="btn btn-success">Novo registro</a>
 <br />
@@ -21,7 +23,7 @@
     @foreach (UnidadeViewModel unidade in Model)
     {
         <tr>
-            <td>@unidade.Id</td>
+            <td>@unidade.Id</td>  
             <td>@unidade.Descricao</td>
             <td>@unidade.EmpresaNome</td>
             <td>@unidade.EstadoNome</td>

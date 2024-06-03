@@ -72,6 +72,22 @@ namespace PBL_Project.DAO
             return a;
         }
 
+        protected DispositivoViewModel MontaModelListagemInfo(DataRow registro)
+        {
+            DispositivoViewModel a = new DispositivoViewModel();
+            a.Id = Convert.ToInt32(registro["id"]);
+            a.UnidadeId = Convert.ToInt32(registro["unidadeId"]);
+            a.UnidadeNome = registro["unidadeNome"].ToString();
+            a.EmpresaId = Convert.ToInt32(registro["empresaId"]);
+            a.EmpresaNome = registro["empresaNome"].ToString();
+            a.EstadoId = Convert.ToInt32(registro["estadoId"]);
+            a.EstadoNome = registro["estadoNome"].ToString();
+            a.CategoriaId = Convert.ToInt32(registro["categoriaId"]);
+            a.CategoriaNome = registro["categoriaNome"].ToString();
+
+            return a;
+        }
+
         public virtual List<DispositivoViewModel> ListagemDispositivos(int unidadeId)
         {
             var p = new SqlParameter[]
@@ -86,6 +102,20 @@ namespace PBL_Project.DAO
 
             foreach (DataRow registro in tabela.Rows)
                 lista.Add(MontaModelListagem(registro));
+
+            return lista;
+        }
+
+        public virtual List<DispositivoViewModel> ListagemDispositivosInfo()
+        {
+
+            NomeSpListagem = "spListagem_DispositivosInfo";
+
+            var tabela = HelperDAO.ExecutaProcSelect(NomeSpListagem);
+            List<DispositivoViewModel> lista = new List<DispositivoViewModel>();
+
+            foreach (DataRow registro in tabela.Rows)
+                lista.Add(MontaModelListagemInfo(registro));
 
             return lista;
         }

@@ -15,6 +15,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections;
+using static PBL_Project.Models.DispositivoViewModel;
 
 namespace PBL_Project.Controllers
 {
@@ -44,24 +47,28 @@ namespace PBL_Project.Controllers
             }
         }
 
-        public IActionResult ExibeConsultaAvancadaDispositivos()
-        {
+        public async Task<IActionResult> ExecutarTarefaPeriodica(int id)
+         {
             try
             {
-                PreparaFiltroEmpresas();
-                PreparaFiltroUnidades();;
-                PreparaFiltroCategorias();
-                PreparaFiltroEstados();
+                var setPoint = 35;
+                var model = DAO.Consulta(id);
 
-                ViewBag.Empresas.Insert(0, new SelectListItem("TODAS", "0"));
-                ViewBag.Unidades.Insert(0, new SelectListItem("TODAS", "0"));
-                ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
-                ViewBag.Estados.Insert(0, new SelectListItem("TODAS", "0"));
-                return View("Filtro");
+                var listaLeituras = await ListaLeituras(model);
+
+                model.Tempos.Clear();
+                model.Temperaturas.Clear();
+                model.ErroRelativo.Clear();
+
+                listaLeituras.ForEach(l => model.Tempos.Add(l.recvTime.ToString("HH: mm:ss")));
+                listaLeituras.ForEach(l => model.Temperaturas.Add(l.attrValue));
+                listaLeituras.ForEach(l => model.ErroRelativo.Add(setPoint - l.attrValue));                
+
+                return Json(model);
             }
             catch (Exception erro)
             {
-                return View("Error", new ErrorViewModel(erro.Message));
+                return View("Error", new ErrorViewModel(erro.ToString()));
             }
         }
 
@@ -80,6 +87,8 @@ namespace PBL_Project.Controllers
                 return View("Error", new ErrorViewModel(erro.ToString()));
             }
         }
+
+
 
         public async virtual Task<IActionResult> SaveDispositivo(DispositivoViewModel model, string Operacao)
         {
@@ -123,6 +132,16 @@ namespace PBL_Project.Controllers
             {
                 model.PreencheAtributosDispositivo();
 
+                //var proxy = new WebProxy
+                //{
+                //    Address = new Uri("http://proxycefsa.cefsa.corp.local:8080"),
+                //    BypassProxyOnLocal = true,
+                //    UseDefaultCredentials = true, //não informaremos usuário e senha
+                //};
+                //var handler = new HttpClientHandler();
+                //handler.Proxy = proxy;
+
+                //using (var httpClient = new HttpClient(handler))
                 using (var httpClient = new HttpClient())
                 {
                     string ip = "172.173.173.47";
@@ -185,6 +204,16 @@ namespace PBL_Project.Controllers
             {
                 model.PreencheAtributosDispositivo();
 
+                //var proxy = new WebProxy
+                //{
+                //    Address = new Uri("http://proxycefsa.cefsa.corp.local:8080"),
+                //    BypassProxyOnLocal = true,
+                //    UseDefaultCredentials = true, //não informaremos usuário e senha
+                //};
+                //var handler = new HttpClientHandler();
+                //handler.Proxy = proxy;
+
+                //using (var httpClient = new HttpClient(handler))
                 using (var httpClient = new HttpClient())
                 {
                     string ip = "172.173.173.47";
@@ -212,8 +241,6 @@ namespace PBL_Project.Controllers
                     var body = JsonConvert.SerializeObject(bodyObject);
 
                     var content = new StringContent(body, Encoding.UTF8, "application/json");
-
-                    
 
                     var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
 
@@ -260,6 +287,16 @@ namespace PBL_Project.Controllers
         {
             try
             {
+                //var proxy = new WebProxy
+                //{
+                //    Address = new Uri("http://proxycefsa.cefsa.corp.local:8080"),
+                //    BypassProxyOnLocal = true,
+                //    UseDefaultCredentials = true, //não informaremos usuário e senha
+                //};
+                //var handler = new HttpClientHandler();
+                //handler.Proxy = proxy;
+
+                //using (var httpClient = new HttpClient(handler))
                 using (var httpClient = new HttpClient())
                 {
                     string ip = "172.173.173.47";
@@ -287,6 +324,54 @@ namespace PBL_Project.Controllers
             catch (Exception erro)
             {
                 return false;
+            }
+        }
+
+        public async Task<IActionResult> ListaDispositivosFiware()
+        {
+            try
+            {
+                //var proxy = new WebProxy
+                //{
+                //    Address = new Uri("http://proxycefsa.cefsa.corp.local:8080"),
+                //    BypassProxyOnLocal = true,
+                //    UseDefaultCredentials = true, //não informaremos usuário e senha
+                //};
+                //var handler = new HttpClientHandler();
+                //handler.Proxy = proxy;
+
+                //using (var httpClient = new HttpClient(handler))
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:4041/iot/devices";
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string resposta = await response.Content.ReadAsStringAsync();
+
+                            JObject content = JObject.Parse(resposta);
+
+                            var dispositivos = JsonConvert.DeserializeObject<List<DispositivoViewModel>>(content.GetValue("devices").ToString());
+                            return Ok(dispositivos);
+                        }
+                        else
+                        {
+                            return StatusCode((int)response.StatusCode, $"Erro ao consultar. Code: {response.StatusCode}");
+                        }
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return StatusCode(500, $"Erro interno: {erro.Message}");
             }
         }
 
@@ -321,6 +406,244 @@ namespace PBL_Project.Controllers
             }
         }
 
+        public IActionResult IndexMonitoramento(int id)
+        {
+            try
+            {
+                var model = DAO.Consulta(id);
+
+                return View("Monitoramento", model);
+            }
+            catch (Exception erro)
+            {
+                return View("Error", new ErrorViewModel(erro.ToString()));
+            }
+        }
+
+        public async Task<List<Leitura>> ListaLeituras(DispositivoViewModel model)
+        {
+            try
+            {
+                model.PreencheAtributosDispositivo();
+
+                //var proxy = new WebProxy
+                //{
+                //    Address = new Uri("http://proxycefsa.cefsa.corp.local:8080"),
+                //    BypassProxyOnLocal = true,
+                //    UseDefaultCredentials = true, //não informaremos usuário e senha
+                //};
+                //var handler = new HttpClientHandler();
+                //handler.Proxy = proxy;
+
+                //using (var httpClient = new HttpClient(handler))
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/{model.device_id}/attributes/temperatura?lastN=20";
+                    //string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/urn:ngsi-ld:TempSensor:01/attributes/temperatura?lastN=40";
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string resposta = await response.Content.ReadAsStringAsync();
+                            JObject jsonResponse = JObject.Parse(resposta);
+
+                            var valuesToken = jsonResponse["contextResponses"][0]["contextElement"]["attributes"][0]["values"];
+                            var valuesList = valuesToken.ToObject<List<Leitura>>();
+
+                            return valuesList;
+                        }
+                        else
+                        {
+                            //return StatusCode((int)response.StatusCode, $"Erro ao consultar. Code: {response.StatusCode}");
+                            return new List<Leitura>();
+                        }
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                //return StatusCode(500, $"Erro interno: {erro.Message}");
+                return new List<Leitura>();
+            }
+        }
+
+        
+
+        public IActionResult ExibeConsultaAvancadaDispositivos()
+        {
+            try
+            {
+                PreparaFiltroEmpresas();
+                PreparaFiltroUnidades();
+                PreparaFiltroCategorias();
+                PreparaFiltroEstados();
+
+                ViewBag.Empresas.Insert(0, new SelectListItem("TODAS", "0"));
+                ViewBag.Unidades.Insert(0, new SelectListItem("TODAS", "0"));
+                ViewBag.Categorias.Insert(0, new SelectListItem("TODAS", "0"));
+                ViewBag.Estados.Insert(0, new SelectListItem("TODAS", "0"));
+
+
+                return View("Filtro");
+            }
+            catch (Exception erro)
+            {
+                return View("Error", new ErrorViewModel(erro.Message));
+            }
+        }
+
+        public async Task<IActionResult> ObtemDadosConsultaAvancada(string descricao, int empresaId, int unidadeId, int categoriaId, int estadoId)
+        {
+            try
+            {
+                //var FiwareList = await ListaDispositivosFiware();
+                DispositivoDAO dao = new DispositivoDAO();
+                if (string.IsNullOrEmpty(descricao))
+                    descricao = "";
+                if (empresaId < 1)
+                    empresaId = 0;
+                if (unidadeId < 1)
+                    unidadeId = 0;
+                if (categoriaId < 1)
+                    categoriaId = 0;
+                if (estadoId < 1)
+                    estadoId = 0;
+
+                var lista = dao.ConsultaAvancadaDispositivos(descricao, empresaId, unidadeId, categoriaId, estadoId);
+
+                return PartialView("GridDispositivos", lista);
+            }
+            catch (Exception erro)
+            {
+                return Json(new { erro = true, msg = erro.Message });
+            }
+        }
+
+        public IActionResult ObtemDadosGraficos(string filtro)
+        { 
+            try
+            {
+                PropriedadesGrafico grafico = new PropriedadesGrafico();
+                DispositivoDAO dao = new DispositivoDAO();
+
+                var lista = dao.ListagemDispositivosInfo();
+
+                switch (filtro)
+                {
+                    case "Empresa":
+                        grafico = GetGraficoEmpresa(lista);
+                        break;
+                    case "Unidade":
+                        grafico = GetGraficoUnidade(lista);
+                        break;
+                    case "Estado":
+                        grafico = GetGraficoEstado(lista);
+                        break;
+                    case "Categoria":
+                        grafico = GetGraficoCategoria(lista);
+                        break;
+                }
+
+                return Json(grafico);
+            }
+            catch (Exception erro)
+            {
+                return Json(new { erro = true, msg = erro.Message });
+            }
+        }
+
+        public PropriedadesGrafico GetGraficoEmpresa(List<DispositivoViewModel> lista)
+        {
+            PropriedadesGrafico grafico = new PropriedadesGrafico();
+
+            var dispositivosPorEmpresa = lista
+                .GroupBy(d => new { d.EmpresaId, d.EmpresaNome })
+                .Select(g => new
+                {
+                    EmpresaNome = g.Key.EmpresaNome,
+                    QuantidadeDispositivos = g.Count()
+                })
+                .ToList();
+
+            grafico.labels = dispositivosPorEmpresa.Select(e => e.EmpresaNome).ToList();
+            grafico.dispositivos = dispositivosPorEmpresa.Select(e => e.QuantidadeDispositivos).ToList();
+
+            grafico.chartColors = grafico.Cores.Take(grafico.labels.Count).ToList();
+
+            return grafico;
+        }
+
+        public PropriedadesGrafico GetGraficoUnidade(List<DispositivoViewModel> lista)
+        {
+            PropriedadesGrafico grafico = new PropriedadesGrafico();
+
+            var dispositivosPorUnidade = lista
+                .GroupBy(d => new { d.UnidadeId, d.UnidadeNome })
+                .Select(g => new
+                {
+                    UnidadeNome = g.Key.UnidadeNome,
+                    QuantidadeDispositivos = g.Count()
+                })
+                .ToList();
+
+            grafico.labels = dispositivosPorUnidade.Select(u => u.UnidadeNome).ToList();
+            grafico.dispositivos = dispositivosPorUnidade.Select(u => u.QuantidadeDispositivos).ToList();
+
+            grafico.chartColors = grafico.Cores.Take(grafico.labels.Count).ToList();
+
+            return grafico;
+        }
+
+        public PropriedadesGrafico GetGraficoEstado(List<DispositivoViewModel> lista)
+        {
+            PropriedadesGrafico grafico = new PropriedadesGrafico();
+
+            var dispositivosPorEstado = lista
+                .GroupBy(d => new { d.EstadoId, d.EstadoNome })
+                .Select(g => new
+                {
+                    EstadoNome = g.Key.EstadoNome,
+                    QuantidadeDispositivos = g.Count()
+                })
+                .ToList();
+
+            grafico.labels = dispositivosPorEstado.Select(e => e.EstadoNome).ToList();
+            grafico.dispositivos = dispositivosPorEstado.Select(e => e.QuantidadeDispositivos).ToList();
+
+            grafico.chartColors = grafico.Cores.Take(grafico.labels.Count).ToList();
+
+            return grafico;
+        }
+
+        public PropriedadesGrafico GetGraficoCategoria(List<DispositivoViewModel> lista)
+        {
+            PropriedadesGrafico grafico = new PropriedadesGrafico();
+
+            var dispositivosPorCategoria = lista
+                .GroupBy(d => new { d.CategoriaId, d.CategoriaNome })
+                .Select(g => new
+                {
+                    CategoriaNome = g.Key.CategoriaNome,
+                    QuantidadeDispositivos = g.Count()
+                })
+                .ToList();
+
+            grafico.labels = dispositivosPorCategoria.Select(c => c.CategoriaNome).ToList();
+            grafico.dispositivos = dispositivosPorCategoria.Select(c => c.QuantidadeDispositivos).ToList();
+
+            grafico.chartColors = grafico.Cores.Take(grafico.labels.Count).ToList();
+
+            return grafico;
+        }
+
+
         protected override void ValidaDados(DispositivoViewModel model, string operacao)
         {
             base.ValidaDados(model, operacao);
@@ -349,63 +672,6 @@ namespace PBL_Project.Controllers
                 }
             }
 
-        }
-
-        public IActionResult ObtemDadosConsultaAvancada(string descricao, int empresaId, int unidadeId, int categoriaId, int estadoId)
-        {
-            try
-            {
-                DispositivoDAO dao = new DispositivoDAO();
-                if (string.IsNullOrEmpty(descricao))
-                    descricao = "";
-                if (empresaId < 1)
-                    empresaId = 0;
-                if (unidadeId < 1)
-                    unidadeId = 0;
-                if (categoriaId < 1)
-                    categoriaId = 0;
-                if (estadoId < 1)
-                    estadoId = 0;
-
-                var FiwareList = ListaDispositivoFiware();
-
-                var lista = dao.ConsultaAvancadaDispositivos(descricao, empresaId, unidadeId, categoriaId, estadoId);
-                return PartialView("GridDispositivos", lista);
-            }
-            catch (Exception erro)
-            {
-                return Json(new { erro = true, msg = erro.Message });
-            }
-        }
-
-        public IActionResult ListaDispositivoFiware()
-        {
-            try
-            {
-
-                using (var httpClient = new HttpClient())
-                {
-                    string ip = "172.173.173.47";
-                    string url = $"http://{ip}:4041/iot/devices";
-
-                    using (var response = httpClient.GetAsync(url).Result)
-                    {
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            string resposta = response.Content.ReadAsStringAsync().Result;
-                            return Content(resposta);
-                        }
-                        else
-                        {
-                            throw new Exception("Erro ao consultar. Code: " + response.StatusCode);
-                        }
-                    }
-                }
-            }
-            catch (Exception erro)
-            {
-                return Json(new { erro = true, msg = erro.Message });
-            }
         }
 
         protected override void PreencheDadosParaView(string Operacao, DispositivoViewModel model)

@@ -1,80 +1,131 @@
 ﻿@{
-	ViewData["Title"] = "Sobre";
+    ViewData["Title"] = "Sobre";
 }
-<link rel="stylesheet" href="~/css/home.css" />
-<div class="container text-center">
-	<h1>Developers</h1>
-	<p>Projeto desenvolvido por: </p>
-	<br>
-	<div class="row">
-		<div class="col-sm-4">
-			<p><strong>Danilo Miranda</strong></p>
-			<p><strong>RA:081220000</strong></p><br>
-			<img src="~/imagens/danilo.png" alt="picture" class="img-responsive cima"><br>
-		</div>
-		<div class="col-sm-4">
-			<p><strong>Hugo Victor</strong></p>
-			<p><strong>RA:081220009</strong></p><br>
-			<img src="~/imagens/hugo1.png" alt="picture" class="img-responsive cima"><br>
-		</div>
-		<div class="col-sm-4">
-			<p><strong>Matheus Martins</strong></p>
-			<p><strong>RA:081220000</strong></p><br>
-			<img src="~/imagens/martins.png" alt="picture" class="img-responsive cima"><br>
-		</div>
-		<div class="col-sm-4">
-			<p><strong>Matheus Pedroza</strong></p>
-			<p><strong>RA:081220000</strong></p><br>
-			<img src="~/imagens/pedroza.png" alt="picture" class="img-responsive cima"><br>
-		</div>
-		<br>
-		<div class="col-sm-4">
-			<p><strong>Thiago Cicero</strong></p>
-			<p><strong>RA:081220013</strong></p><br>
-			<img src="~/imagens/thiago.png" alt="picture" class="img-responsive cima"><br>
-		</div>
-	</div>
-	<div class="row row_bottom custom-center">
-		<div class="col-sm-4">
-			<p><strong>Sistema de gerenciamento de dispositivos que fazem o monitoramento da temperatura em estufas de frabricação de motores,
-				desenvolvido em ASP.NET 3.1, para o PBL do curso de Engenharia de Computação do 5 semestre, para as matérias de Linguagem de programação, 
-				Automação e controle, Sistemas embarcados e Mecânica dos fluidos lecionadas respectivamente pelos professores Eduardo Rosalem, Marcones, 
-				Fabio Cabrini e Ricardo Calvo.</strong></p>
-		</div>
-	</div>
-</div>
 
-<style>
+<link rel="stylesheet" href="~/css/site.css" />
 
-	.custom-center {
-		display: flex;
-		justify-content: center;
-		align-items: flex-start;
-		margin-top: 10%;
-		height: 100vh; /* Altera a altura conforme necessário */
-	}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Sobre</title>
+    <style>
+        .centered-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 85vh;
+            text-align: center;
+            background-image: url('/imagens/tmBackground.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
 
-	.col-sm-4 {
-		text-align: center;
-	}
-	img {
-		max-width: 300px;
-		max-height: 250px;
-		width: auto;
-		height: auto;
-	}
+        .centered-content div {
+            margin-top: 20px;
+        }
 
-		img.baixo {
-			margin: -25px 0px;
-		}
+        .centered-content h1 {
+            font-size: 3em;
+            color: #fff;
+        }
 
-	.campos {
-		margin: 20px 0px;
-	}
+        .text-container {
+            word-wrap: break-word;
+            text-align: right;
+        }
 
-	p {
-		margin: 0px;
-		color: black;
-		text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
-	}
-</style>
+        .centered-content p {
+            font-size: 1.5em;
+            color: white; /* Set text content to white */
+            /* Option 1: Using text-stroke (limited browser support) */
+            -webkit-text-stroke: 1px black; /* Apply black stroke for WebKit browsers */
+            /* Option 2: Using multiple properties (better browser support) */
+            -webkit-text-stroke-width: 1px; /* Set stroke width for WebKit browsers */
+            -webkit-text-stroke-color: black; /* Set stroke color for WebKit browsers */
+            text-outline: 1px black; /* Outline with black for broader support */
+        }
+
+        .custom-center {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 10%;
+            height: 100vh;
+        }
+
+        .col-sm-4 {
+            text-align: right;
+        }
+
+        img {
+            max-width: 300px;
+            max-height: 250px;
+            width: auto;
+            height: auto;
+        }
+
+        img.baixo {
+            margin: -25px 0px;
+        }
+
+        .campos {
+            margin: 20px 0px;
+        }
+
+        p {
+            margin: 0px;
+            color: black;
+            text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+        }
+    </style>
+</head>
+<body>
+    <div class="centered-content">
+        <div class="container text-center">
+            <h1>Developers</h1>
+            <p>Projeto desenvolvido por: </p>
+            <br>
+            <div class="row">
+                <div class="col-sm-4">
+                    <img src="~/imagens/danilo.png" alt="picture" class="img-responsive cima"><br>
+                    <p><strong>Danilo Miranda</strong></p>
+                    <p><strong>RA:081220000</strong></p><br>
+                </div>
+                <div class="col-sm-4">
+                    <img src="~/imagens/hugo1.png" alt="picture" class="img-responsive cima"><br>
+                    <p><strong>Hugo Victor</strong></p>
+                    <p><strong>RA:081220009</strong></p><br>
+                </div>
+                <div class="col-sm-4">
+                    <img src="~/imagens/martins.png" alt="picture" class="img-responsive cima"><br>
+                    <p><strong>Matheus Martins</strong></p>
+                    <p><strong>RA:081220000</strong></p><br>
+                </div>
+                <div class="col-sm-4">
+                    <img src="~/imagens/pedroza.png" alt="picture" class="img-responsive cima"><br>
+                    <p><strong>Matheus Pedroza</strong></p>
+                    <p><strong>RA:081220002</strong></p><br>
+                </div>
+                <div class="col-sm-4">
+                    <img src="~/imagens/thiago.png" alt="picture" class="img-responsive cima"><br>
+                    <p><strong>Thiago Cicero</strong></p>
+                    <p><strong>RA:081220013</strong></p><br>
+                </div>
+            </div>
+            <div class="row row_bottom custom-center">
+                <div class="text-container">
+                    <p>
+                        <strong>
+                            Sistema de gerenciamento de dispositivos que fazem o monitoramento da temperatura em estufas de frabricação de motores,
+                            desenvolvido em ASP.NET 3.1, para o PBL do curso de Engenharia de Computação do 5 semestre, para as matérias de Linguagem de programação,
+                            Automação e controle, Sistemas embarcados e Mecânica dos fluidos lecionadas respectivamente pelos professores Eduardo Rosalem, Marcones,
+                            Fabio Cabrini e Ricardo Calvo.
+                        </strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

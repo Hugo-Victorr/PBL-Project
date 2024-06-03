@@ -67,6 +67,20 @@ namespace PBL_Project.DAO
                 }
             }
         }
+
+        public static DataTable ExecutaProcSelect(string nomeProc)
+        {
+            using (SqlConnection conexao = ConexaoBD.GetConexao())
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter(nomeProc, conexao))
+                {
+                    adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    DataTable tabela = new DataTable();
+                    adapter.Fill(tabela);
+                    return tabela;
+                }
+            }
+        }
     }
 
 }

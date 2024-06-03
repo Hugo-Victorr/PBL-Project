@@ -42,6 +42,22 @@ namespace PBL_Project.DAO
             return a;
         }
 
+        protected UnidadeViewModel MontaModelListagemAvancada(DataRow registro)
+        {
+            UnidadeViewModel a = new UnidadeViewModel();
+            a.Id = Convert.ToInt32(registro["id"]);
+            a.Descricao = registro["unidadeNome"].ToString();
+            a.EmpresaId = Convert.ToInt32(registro["empresaId"]);
+            a.EmpresaNome = registro["empresaNome"].ToString();
+            a.CategoriaId = Convert.ToInt32(registro["categoriaId"]);
+            a.CategoriaNome = registro["categoriaNome"].ToString();
+            a.EstadoId = Convert.ToInt32(registro["estadoId"]);
+            a.EstadoNome = registro["estadoNome"].ToString();
+            a.DataFundacao = Convert.ToDateTime(registro["dataFundacao"]);
+
+            return a;
+        }
+
         public virtual List<UnidadeViewModel> ListagemUnidades(int empresaId)
         {
             var p = new SqlParameter[]
@@ -70,11 +86,10 @@ namespace PBL_Project.DAO
               new SqlParameter("estadoId", estadoId)
             };
 
-
             var tabela = HelperDAO.ExecutaProcSelect("spListagemAvancada_Unidades", p);
             var lista = new List<UnidadeViewModel>();
             foreach (DataRow dr in tabela.Rows)
-                lista.Add(MontaModelListagem(dr));
+                lista.Add(MontaModelListagemAvancada(dr));
             return lista;
         }
 

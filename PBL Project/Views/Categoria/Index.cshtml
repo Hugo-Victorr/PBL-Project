@@ -1,5 +1,7 @@
 ﻿@model List<CategoriaViewModel>
 
+<h2>Listagem de Categorias</h2>
+
 <a href="/categoria/Create" class="btn btn-success">Novo registro</a>
 <br />
 <br />
@@ -16,8 +18,12 @@
             <td>@categoria.Id</td>
             <td>@categoria.Descricao</td>
             <td>
-                <a href="/categoria/edit?id=@categoria.Id">✍🏻</a>
-                <a href="javascript:apagarCategoria(@categoria.Id)">💣</a>
+                <a href="/categoria/edit?id=@categoria.Id">
+                    <img src="~/imagens/editIcon.png" width="20" height="20">
+                </a>
+                <a href="javascript:apagarCategoria(@categoria.Id)">
+                    <img src="~/imagens/trashIcon.png" width="20" height="20">
+                </a>
             </td>
         </tr>
     }

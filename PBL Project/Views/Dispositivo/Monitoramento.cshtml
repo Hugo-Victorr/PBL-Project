@@ -1,0 +1,33 @@
+﻿@using Newtonsoft.Json
+@model DispositivoViewModel
+
+<h2>Monitoramento do dispositivo</h2>
+<canvas id="grafico" width="400" height="150"> 
+
+</canvas>   
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var intervalId;
+        var dispositivoId = @Model.Id;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchDadosParaGrafico(dispositivoId);
+            startPeriodicTask();
+        });
+        window.addEventListener('beforeunload', function () {
+            stopPeriodicTask();
+        });
+
+        function startPeriodicTask() {
+            intervalId = setInterval(function () {
+                fetchDadosParaGrafico(dispositivoId);
+            }, 2000); // 2 segundos
+        }
+
+        function stopPeriodicTask() {
+            clearInterval(intervalId);
+        }
+    </script>
+}
