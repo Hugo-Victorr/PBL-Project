@@ -1,7 +1,8 @@
-# PBL-Project Based Learning
+# PBL-PROJECT BASED LEARNING
 
-# CÓDIGO IMPLEMENTADO NO ESP32 PARA O MONITORAMENTO DA TEMPERATURA EM UMA ESTUFA
+## CÓDIGO IMPLEMENTADO NO ESP32 PARA O MONITORAMENTO DA TEMPERATURA EM UMA ESTUFA DE MOTORES ELÉTRICOS
 
+```cpp
 #include <WiFi.h>
 #include <PubSubClient.h>
 
@@ -109,4 +110,3 @@ void handleTemp() {
     Serial.println(mensagem.c_str());
     MQTT.publish(TOPICO_PUBLISH_2, mensagem.c_str()); // Publica a temperatura no tópico MQTT
 }
-
