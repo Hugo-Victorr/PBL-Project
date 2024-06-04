@@ -1,5 +1,9 @@
 # PBL-PROJECT BASED LEARNING
 
+## ARQUITETURA
+
+![FiwareDeploy_new drawio](https://github.com/Hugo-Victorr/PBL-Project/assets/78647874/2ca611ed-d5f2-4ec2-8b85-ed7b00d5fb1d)
+
 ## CÓDIGO IMPLEMENTADO NO ESP32 PARA O MONITORAMENTO DA TEMPERATURA EM UMA ESTUFA DE MOTORES ELÉTRICOS
 
 ```cpp
