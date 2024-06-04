@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlTypes;
+using System.Threading.Tasks;
 
 namespace PBL_Project.Controllers
 {
@@ -26,6 +27,19 @@ namespace PBL_Project.Controllers
                 UnidadeDAO unidadeDAO = new UnidadeDAO();
                 var lista = unidadeDAO.ListagemUnidades(HelperDAO.empresaId);
                 return View(NomeViewIndex, lista);
+            }
+            catch (Exception erro)
+            {
+                return View("Error", new ErrorViewModel(erro.ToString()));
+            }
+        }
+
+        public IActionResult DeleteUnidade(int id)
+        {
+            try
+            {
+                DAO.Delete(id);
+                return RedirectToAction("IndexFiltrado");
             }
             catch (Exception erro)
             {

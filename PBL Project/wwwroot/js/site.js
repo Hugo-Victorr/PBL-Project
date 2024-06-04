@@ -5,7 +5,7 @@
 
 function apagarUnidade(id) {
     if (confirm('Confirma a exclusão do registro?'))
-        location.href = '/unidade/Delete?id=' + id;
+        location.href = '/unidade/DeleteUnidade?id=' + id;
 }
 
 function apagarDispositivo(device_id, id) {
@@ -236,7 +236,7 @@ function createBarChart(labels, quantidade, barColors) {
                 y: {
                     title: {
                         display: true,
-                        text: 'Dispositivos'
+                        text: 'Quantidade de Dispositivos'
                     },
                     beginAtZero: true
                 }

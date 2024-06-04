@@ -439,8 +439,8 @@ namespace PBL_Project.Controllers
                 using (var httpClient = new HttpClient())
                 {
                     string ip = "172.173.173.47";
-                    string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/{model.device_id}/attributes/temperatura?lastN=20";
-                    //string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/urn:ngsi-ld:TempSensor:01/attributes/temperatura?lastN=40";
+                    //string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/{model.device_id}/attributes/temperatura?lastN=20";
+                    string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/urn:ngsi-ld:TempSensor:01/attributes/temperatura?lastN=40";
 
                     var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
