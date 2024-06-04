@@ -6,6 +6,13 @@
 
 </canvas>   
 
+
+<h3>Lista de Leituras</h3>
+<br />
+
+<div id="resultadoLeituras" class="table-responsive">
+</div>
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -14,6 +21,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             fetchDadosParaGrafico(dispositivoId);
+            criaTabelaLeituras();
             startPeriodicTask();
         });
         window.addEventListener('beforeunload', function () {
@@ -23,6 +31,7 @@
         function startPeriodicTask() {
             intervalId = setInterval(function () {
                 fetchDadosParaGrafico(dispositivoId);
+                criaTabelaLeituras();
             }, 2000); // 2 segundos
         }
 

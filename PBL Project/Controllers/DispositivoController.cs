@@ -23,6 +23,7 @@ namespace PBL_Project.Controllers
 {
     public class DispositivoController : PadraoController<DispositivoViewModel>
     {
+        public List<Leitura> leituras = new List<Leitura>();
         public DispositivoController()
         {
             DAO = new DispositivoDAO();
@@ -62,7 +63,9 @@ namespace PBL_Project.Controllers
 
                 listaLeituras.ForEach(l => model.Tempos.Add(l.recvTime.ToString("HH: mm:ss")));
                 listaLeituras.ForEach(l => model.Temperaturas.Add(l.attrValue));
-                listaLeituras.ForEach(l => model.ErroRelativo.Add(setPoint - l.attrValue));                
+                listaLeituras.ForEach(l => model.ErroRelativo.Add(setPoint - l.attrValue));
+
+                leituras = listaLeituras;
 
                 return Json(model);
             }
@@ -496,6 +499,20 @@ namespace PBL_Project.Controllers
             catch (Exception erro)
             {
                 return View("Error", new ErrorViewModel(erro.Message));
+            }
+        }
+
+        public IActionResult ObtemDadosLeituras()
+        {
+            try
+            {
+                var lista = leituras.ToList();
+
+                return PartialView("GridLeituras", lista);
+            }
+            catch (Exception erro)
+            {
+                return Json(new { erro = true, msg = erro.Message });
             }
         }
 

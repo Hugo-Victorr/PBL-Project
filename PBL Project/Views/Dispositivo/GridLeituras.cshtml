@@ -1,0 +1,22 @@
+﻿@model List<Leitura>
+
+<table class="table table-striped table-responsive">
+    <tr>
+        <th>Código</th>
+        <th>Tempo</th>
+        <th>Descrição</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+    </tr>
+
+    @foreach (Leitura leitura in Model)
+    {
+        <tr>
+            <td>@leitura._id</td>
+            <td>@leitura.recvTime.ToShortDateString()</td>
+            <td>@leitura.attrName</td>
+            <td>@leitura.attrType</td>
+            <td>@leitura.attrValue</td>
+        </tr>
+    }
+</table>

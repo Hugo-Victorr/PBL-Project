@@ -88,6 +88,20 @@ function aplicaFiltroConsultaAvancadaDispositivos() {
     });
 }
 
+function criaTabelaLeituras() {
+    $.ajax({
+        url: "/dispositivo/ObtemDadosLeituras",
+        success: function (dados) {
+            if (dados.erro != undefined) {
+                alert(dados.msg);
+            }
+            else {
+                document.getElementById('resultadoLeituras').innerHTML = dados;
+            }
+        },
+    });
+}
+
 function fetchDadosParaGrafico(id) {
     fetch(`/dispositivo/ExecutarTarefaPeriodica?id=${id}`)
         .then(response => response.json()
