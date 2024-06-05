@@ -144,8 +144,7 @@ Temperatura estavel em 36 graus e proxima do SetPoint (35), exibindo erro relati
 
 ## Conclusão
 
-Projeto multidisciplinar, desenvolvido utilizando ESP32 como disposiivo IOT, executando comunicação com a lataforma de Back-End FIWARE e através da aplicação projetada em ASP.NET Core 3.1, é possivel consumir as APIs para efetuar o CRUD do dispositivo na plataforma FIWARE e recuperando os dados através do STH-Comet, para plotar o grafico de Temperatura/tempo e exibir as leituras em uma tabela em tempo real. O projeto é embasado na representação em bloco de malaha aberta, função de transferencia em malha fechada e 
-calculo do erro relativo. Para apresentar uma maior precisão no sistema termico do projeto, temos como base os calculos de transferencia de temperatura de conduçã e convecção levando em consideração as resistencias termicas do ar, do acrilico, das aletas e tendo como variavel de pertubação um ventilador.
+Projeto multidisciplinar, desenvolvido utilizando ESP32 como disposiivo IOT, executando comunicação com a lataforma de Back-End FIWARE e através da aplicação projetada em ASP.NET Core 3.1, é possivel consumir as APIs para efetuar o CRUD do dispositivo na plataforma FIWARE e recuperando os dados através do STH-Comet, para plotar o grafico de Temperatura/tempo e exibir as leituras em uma tabela em tempo real. O projeto é embasado na representação em bloco de malaha aberta, função de transferencia em malha fechada e calculo do erro relativo. Para apresentar uma maior precisão no sistema termico do projeto, temos como base os calculos de transferencia de temperatura por condução e convecção levando em consideração as resistencias termicas do ar, do acrilico, das aletas e tendo como variavel de pertubação um ventilador.
 
 ## Considerações 
 
@@ -153,7 +152,7 @@ Projeto desenvolvido para o PBL (Project Based Learning), Faculdade Engenheiro S
 
 - Sistemas Embarcados (Prof. Fabio Cabrini);
 - Controle e Automação (Prof. Marcones Cleber Brito);
-- Mecânica do Fluidos (Prof. Ricardo Calvo);
+- Fenômenos de Transporte (Prof. Ricardo Calvo);
 - Linguagem de Progamação I (Prof. Eduardo Rosalem).
 
 ## Integrantes
