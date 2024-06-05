@@ -1,10 +1,18 @@
 # PBL-PROJECT BASED LEARNING
 
-## ARQUITETURA
+## Introdução
+
+Aplicação de IoT no monitoramento de estufas utilizadas na construção de motores elétricos.
+
+O projeto visa implementar um sistema de controle e monitoramento IoT para as estufas de secagem de motores elétricos, utilizando a plataforma de back-end FIWARE para realizar o processamento e armazenamento das informações de contexto, visando otimizar o processo global de fabricação, assegurando precisão na regulação de temperatura, monitoramento remoto em tempo real e aprimoramento da eficiência operacional, resultando em motores elétricos de alta qualidade e consistência em todas as unidades da empresa. O sistema proposto será apoiado por uma plataforma na Web desenvolvida em Asp.net MVC que dará suporte aos cadastros com exibição dos dados no formato de consultas e dashboards
+
+## Arquitetura
 
 ![FiwareDeploy_new drawio](https://github.com/Hugo-Victorr/PBL-Project/assets/78647874/2ca611ed-d5f2-4ec2-8b85-ed7b00d5fb1d)
 
-## CÓDIGO IMPLEMENTADO NO ESP32 PARA O MONITORAMENTO DA TEMPERATURA EM UMA ESTUFA DE MOTORES ELÉTRICOS
+## Código C++ ESP32
+
+Código implementado no ESP32 para o monitoramento da temperatura em uma estufa de motores elétricos:
 
 ```cpp
 #include <WiFi.h>
@@ -114,3 +122,45 @@ void handleTemp() {
     Serial.println(mensagem.c_str());
     MQTT.publish(TOPICO_PUBLISH_2, mensagem.c_str()); // Publica a temperatura no tópico MQTT
 }
+```
+
+## Montagem do sistema
+
+Sistema montado utilizando protoboard, gerador de sinal, ESP32, Sensor de temperatura DHT11,  resistores, jumpers e um motor utilizado para gerar calor dentro de um cubo de acrilico.
+
+![dispositivo](https://github.com/Hugo-Victorr/PBL-Project/assets/105120915/80945669-7f37-4c56-a8b4-6b874df5a6ca)
+
+### Monitoramento pela plataforma desktop
+
+Temperatura estavel em 40 graus: 
+
+![grafico](https://github.com/Hugo-Victorr/PBL-Project/assets/105120915/82c4a63b-a4d9-48f2-bdf4-2f84e1a2f00c)
+
+## Monitoramento ASP.NET 
+
+Temperatura estavel em 36 graus e proxima do SetPoint (35), exibindo erro relativo de -1:
+
+![PBL grafico](https://github.com/Hugo-Victorr/PBL-Project/assets/105120915/ee008902-f7d5-4360-ac83-54b233c6a046)
+
+## Conclusão
+
+Projeto multidisciplinar, desenvolvido utilizando ESP32 como disposiivo IOT, executando comunicação com a lataforma de Back-End FIWARE e através da aplicação projetada em ASP.NET Core 3.1, é possivel consumir as APIs para efetuar o CRUD do dispositivo na plataforma FIWARE e recuperando os dados através do STH-Comet, para plotar o grafico de Temperatura/tempo e exibir as leituras em uma tabela em tempo real. O projeto é embasado na representação em bloco de malaha aberta, função de transferencia em malha fechada e 
+calculo do erro relativo. Para apresentar uma maior precisão no sistema termico do projeto, temos como base os calculos de transferencia de temperatura de conduçã e convecção levando em consideração as resistencias termicas do ar, do acrilico, das aletas e tendo como variavel de pertubação um ventilador.
+
+## Considerações 
+
+Projeto desenvolvido para o PBL (Project Based Learning), Faculdade Engenheiro Salvador Arena, proposto pelas disciplinas: 
+
+- Sistemas Embarcados (Prof. Fabio Cabrini);
+- Controle e Automação (Prof. Marcones Cleber Brito);
+- Mecânica do Fluidos (Prof. Ricardo Calvo);
+- Linguagem de Progamação I (Prof. Eduardo Rosalem).
+
+## Integrantes
+
+- Danilo Miranda - 081220021- linkedIn: https://www.linkedin.com/in/tognettidm/
+- Hugo Victor Lima - 081220009 - linkedIn:  https://www.linkedin.com/in/hugo-victor-lima-9b5046247/
+- Matheus Martins - 081220026 - linkedIn: https://www.linkedin.com/in/matheus-martins-70b955196/
+- Matheus Pedroza - 081220002 - linkedIn: https://www.linkedin.com/in/matheus-pedroza/
+- Thiago Souza - 081220013 - linkedIn: https://www.linkedin.com/in/thiagocicero/
+
