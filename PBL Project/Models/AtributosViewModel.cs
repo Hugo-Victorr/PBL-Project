@@ -21,6 +21,8 @@ namespace PBL_Project.Models
     {
         [Newtonsoft.Json.JsonIgnore]
         public int dispositivoId { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public int ErroRelativo { get; set; }
         public string _id { get; set; }
         public DateTime recvTime { get; set; }
         public string attrName { get; set; }

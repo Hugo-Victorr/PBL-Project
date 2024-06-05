@@ -37,7 +37,7 @@ function aplicaFiltroConsultaAvancadaEmpresas() {
     var vCategoria = document.getElementById('categoria').value;
     $.ajax({
         url: "/empresa/ObtemDadosConsultaAvancada",
-        data: { descricao: vDescricao, categoriaId: vCategoria, estadoId: vEstado},
+        data: { descricao: vDescricao, categoriaId: vCategoria, estadoId: vEstado },
         success: function (dados) {
             if (dados.erro != undefined) {
                 alert(dados.msg);
@@ -56,7 +56,7 @@ function aplicaFiltroConsultaAvancadaUnidades() {
     var vEstado = document.getElementById('estado').value;
     $.ajax({
         url: "/unidade/ObtemDadosConsultaAvancada",
-        data: { descricao: vDescricao, empresaId: vEmpresa, categoriaId: vCategoria, estadoId: vEstado},
+        data: { descricao: vDescricao, empresaId: vEmpresa, categoriaId: vCategoria, estadoId: vEstado },
         success: function (dados) {
             if (dados.erro != undefined) {
                 alert(dados.msg);
@@ -88,9 +88,10 @@ function aplicaFiltroConsultaAvancadaDispositivos() {
     });
 }
 
-function criaTabelaLeituras() {
+function criaTabelaLeituras(id) {
     $.ajax({
-        url: "/dispositivo/ObtemDadosLeituras",
+        url: '/dispositivo/ObtemDadosLeituras',
+        data: { id: id },
         success: function (dados) {
             if (dados.erro != undefined) {
                 alert(dados.msg);
@@ -102,61 +103,86 @@ function criaTabelaLeituras() {
     });
 }
 
+function check() {
+    $.ajax({
+        url: '/dispositivo/check',
+        success: function (dados) {
+            if (dados.erro != undefined) {
+                alert(dados.msg);
+            }
+        },
+    });
+}
+
 function fetchDadosParaGrafico(id) {
     fetch(`/dispositivo/ExecutarTarefaPeriodica?id=${id}`)
         .then(response => response.json()
-        .then(data => {
-            createTemperatureChart(data.tempos, data.temperaturas, data.erroRelativo);
-        })
-        .catch(error => console.error('Erro:', error)));
+            .then(data => {
+                createTemperatureChart(data.tempos, data.temperaturas, data.erroRelativo);
+            })
+            .catch(error => console.error('Erro:', error)));
 }
 
-let myChart; 
+let myChart;
 
 function createTemperatureChart(tempos, temperaturas, erroRelativo) {
     const ctx = document.getElementById('grafico').getContext('2d');
 
-    if (myChart) {
-        myChart.destroy();
-    }
+    if (!myChart) {
 
-    myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: tempos,
-            datasets: [{
-                label: 'Temperatura',
-                data: temperaturas,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 1
-            },
-            {
-                label: 'Erro relativo',
-                data: erroRelativo,
-                borderColor: 'rgba(255, 0, 0, 1)',
-                backgroundColor: 'rgba(255, 0, 0, 0.2)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Tempo'
-                    }
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: tempos,
+                datasets: [{
+                    label: 'Temperatura',
+                    data: temperaturas,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1,
+                    tension: 0.8,
+                    pointStyle: false,
                 },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Temperatura (°C)'
+                {
+                    label: 'Erro relativo',
+                    data: erroRelativo,
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                    borderWidth: 1,
+                    tension: 0.8,
+                    pointStyle: false,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tempo'
+                        }
                     },
-                    beginAtZero: true
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperatura (°C)'
+                        },
+                        beginAtZero: false,
+                    }
                 }
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeInOutSine'
             }
-        }
-    });
+        });
+    }
+    else {
+        myChart.data.labels = tempos;
+        myChart.data.datasets[0].data = temperaturas;
+        myChart.data.datasets[1].data = erroRelativo;
+        myChart.update();
+    }
+    
 }
 
 //cria graficos dashboard
@@ -205,17 +231,17 @@ function createPieChart(labels, quantidade, pieColors) {
                 padding: {
                     left: 20,
                     right: 20,
-                    top: 50, 
+                    top: 50,
                     bottom: 20
                 }
             },
             plugins: {
                 legend: {
-                    position: 'top', 
+                    position: 'top',
                     labels: {
                         boxWidth: 20,
                         font: {
-                            size: 12 
+                            size: 12
                         }
                     }
                 }

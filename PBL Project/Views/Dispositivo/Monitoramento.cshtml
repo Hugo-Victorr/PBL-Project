@@ -4,39 +4,41 @@
 <h2>Monitoramento do dispositivo</h2>
 <canvas id="grafico" width="400" height="150"> 
 
-</canvas>   
+</canvas>  
 
+ <br/>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+    <h3>Lista de Leituras</h3>
+    <br />
 
-<h3>Lista de Leituras</h3>
-<br />
+    <div id="resultadoLeituras">
+    </div>
 
-<div id="resultadoLeituras" class="table-responsive">
-</div>
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            var intervalId;
+            var dispositivoId = @Model.Id;
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var intervalId;
-        var dispositivoId = @Model.Id;
-
-        document.addEventListener('DOMContentLoaded', function () {
-            fetchDadosParaGrafico(dispositivoId);
-            criaTabelaLeituras();
-            startPeriodicTask();
-        });
-        window.addEventListener('beforeunload', function () {
-            stopPeriodicTask();
-        });
-
-        function startPeriodicTask() {
-            intervalId = setInterval(function () {
+            document.addEventListener('DOMContentLoaded', function () {
                 fetchDadosParaGrafico(dispositivoId);
-                criaTabelaLeituras();
-            }, 2000); // 2 segundos
-        }
+                criaTabelaLeituras(dispositivoId);
+                startPeriodicTask();
+            });
+            window.addEventListener('beforeunload', function () {
+                stopPeriodicTask();
+            });
 
-        function stopPeriodicTask() {
-            clearInterval(intervalId);
-        }
-    </script>
-}
+            function startPeriodicTask() {
+                intervalId = setInterval(function () {
+                    fetchDadosParaGrafico(dispositivoId);
+                    criaTabelaLeituras(dispositivoId);
+                }, 5000); 
+            }
+
+            function stopPeriodicTask() {
+                clearInterval(intervalId);
+            }
+        </script>
+    }
+</div>

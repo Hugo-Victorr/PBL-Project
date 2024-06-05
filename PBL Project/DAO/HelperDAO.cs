@@ -1,5 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
+using PBL_Project.Models;
+using System.Collections.Generic;
 
 namespace PBL_Project.DAO
 {
@@ -7,6 +9,9 @@ namespace PBL_Project.DAO
     {
         public static int empresaId = 0;
         public static int unidadeId = 0;
+
+        public static DispositivoViewModel ListaRegistros { get; set; }
+        public static List<Leitura>  TabelaRegistros { get; set; } = new List<Leitura>();
 
         public static void ExecutaSQL(string sql, SqlParameter[] parametros)
         {

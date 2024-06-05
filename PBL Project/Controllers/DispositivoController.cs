@@ -18,12 +18,13 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections;
 using static PBL_Project.Models.DispositivoViewModel;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace PBL_Project.Controllers
 {
     public class DispositivoController : PadraoController<DispositivoViewModel>
     {
-        public List<Leitura> leituras = new List<Leitura>();
+        
         public DispositivoController()
         {
             DAO = new DispositivoDAO();
@@ -65,9 +66,16 @@ namespace PBL_Project.Controllers
                 listaLeituras.ForEach(l => model.Temperaturas.Add(l.attrValue));
                 listaLeituras.ForEach(l => model.ErroRelativo.Add(setPoint - l.attrValue));
 
-                leituras = listaLeituras;
+                if (HelperDAO.ListaRegistros == null)
+                    HelperDAO.ListaRegistros = model;
+                else
+                {
+                    HelperDAO.ListaRegistros.Tempos.AddRange(model.Tempos);
+                    HelperDAO.ListaRegistros.Temperaturas.AddRange(model.Temperaturas);
+                    HelperDAO.ListaRegistros.ErroRelativo.AddRange(model.ErroRelativo);
+                }
 
-                return Json(model);
+                return Json(HelperDAO.ListaRegistros);
             }
             catch (Exception erro)
             {
@@ -427,7 +435,7 @@ namespace PBL_Project.Controllers
         {
             try
             {
-                model.PreencheAtributosDispositivo();
+                //model.PreencheAtributosDispositivo();
 
                 //var proxy = new WebProxy
                 //{
@@ -443,7 +451,7 @@ namespace PBL_Project.Controllers
                 {
                     string ip = "172.173.173.47";
                     //string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/{model.device_id}/attributes/temperatura?lastN=20";
-                    string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/urn:ngsi-ld:TempSensor:01/attributes/temperatura?lastN=40";
+                    string url = $"http://{ip}:8666/STH/v1/contextEntities/type/TempSensor/id/urn:ngsi-ld:TempSensor:01/attributes/temperatura?lastN=9";
 
                     var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
@@ -502,13 +510,24 @@ namespace PBL_Project.Controllers
             }
         }
 
-        public IActionResult ObtemDadosLeituras()
+        public async Task<IActionResult> ObtemDadosLeituras(int id)
         {
             try
             {
-                var lista = leituras.ToList();
+                var setPoint = 35;
+                var model = DAO.Consulta(id);
 
-                return PartialView("GridLeituras", lista);
+                var listaLeituras = await ListaLeituras(model);
+
+                listaLeituras.ForEach(l => l.ErroRelativo = setPoint - l.attrValue);
+                listaLeituras.Reverse();
+
+                //HelperDAO.TabelaRegistros.AddRange(listaLeituras);
+                HelperDAO.TabelaRegistros.InsertRange(0, listaLeituras);
+
+                var list = HelperDAO.TabelaRegistros;
+
+                return PartialView("GridLeituras", list);
             }
             catch (Exception erro)
             {
@@ -708,6 +727,127 @@ namespace PBL_Project.Controllers
                 }
             else
                 return null;
+        }
+
+        public async Task<string> HelthCheckServices()
+        {
+            try
+            {
+                //model.PreencheAtributosDispositivo();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:4041/iot/services";
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return response.IsSuccessStatusCode.ToString();
+                        }
+                        else
+                        {
+                            return response.IsSuccessStatusCode.ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return $"Erro interno: {erro.Message}";
+            }
+        }
+
+        public async Task<string> HelthCheck()
+        {
+            try
+            {
+                //model.PreencheAtributosDispositivo();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:4041/iot/about";
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        var jsonContent = await response.Content.ReadAsStringAsync();
+
+                        var jsonObject = JObject.Parse(jsonContent);
+
+                        string concatenatedValues =
+                            $"libVersion: {jsonObject["libVersion"]}, " +
+                            $"port: {jsonObject["port"]}, " +
+                            $"baseRoot: {jsonObject["baseRoot"]}, " +
+                            $"version: {jsonObject["version"]}";
+
+                        return concatenatedValues;
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return $"Erro interno: {erro.Message}";
+            }
+        }
+
+        public async Task<string> HelthCheckSTH()
+        {
+            try
+            {
+                //model.PreencheAtributosDispositivo();
+
+                using (var httpClient = new HttpClient())
+                {
+                    string ip = "172.173.173.47";
+                    string url = $"http://{ip}:8666/version";
+
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+                    requestMessage.Headers.Add("fiware-service", "smart");
+                    requestMessage.Headers.Add("fiware-servicepath", "/");
+
+                    using (var response = await httpClient.SendAsync(requestMessage))
+                    {
+                        var jsonContent = await response.Content.ReadAsStringAsync();
+
+                        var jsonObject = JObject.Parse(jsonContent);
+
+                        string version = (string)jsonObject["version"];
+
+                        return version;
+                    }
+                }
+            }
+            catch (Exception erro)
+            {
+                return $"Erro interno: {erro.Message}";
+            }
+        }
+
+        public async Task check()
+        {
+            try
+            {
+                ViewBag.checkServices = await HelthCheckServices();
+                ViewBag.check = await HelthCheck();
+                ViewBag.checkSTH = await HelthCheckSTH();
+            }
+            catch (Exception erro)
+            {
+
+            }
         }
     }
 }
