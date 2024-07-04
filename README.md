@@ -124,6 +124,12 @@ void handleTemp() {
 }
 ```
 
+## Simulação 
+
+Simulação feita na plataforma WOKWI, utilizando o componente ESP32, o codigo já disponibilizado e um regulador para alterar o valor de temperatura.
+
+![image](https://github.com/Hugo-Victorr/PBL-Project/assets/105120915/bd9e3e4a-1355-4550-94cd-2b07c2c46f38)
+
 ## Montagem do sistema
 
 Sistema montado utilizando protoboard, gerador de sinal, ESP32, Sensor de temperatura DHT11,  resistores, jumpers e um motor utilizado para gerar calor dentro de um cubo de acrilico.
